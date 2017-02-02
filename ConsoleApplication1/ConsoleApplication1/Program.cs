@@ -1,98 +1,68 @@
-﻿using System;
+﻿// Movies class which contains the list of Movie objects
+
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using System.Xml.Serialization;
 
-[Serializable]
+private object textBox_XmlFileName;
 
-public class Employee
+public class Movies
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-}
-
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        Employee temp = new Employee();
-        temp.FirstName = "Code";
-        temp.LastName = "Handbook";
-
-        Type testing = null;
-        string xml = GetXMLFromObject(temp);
-        Employee emp=new Employee();
-        emp= (Employee) ObjectToXML(xml,typeof(Employee));
-
-        Console.WriteLine("The name of the emp is {0}",temp.FirstName);
-        Console.WriteLine("The name of the temp is {0}", emp.FirstName);
-
-        //    Console.WriteLine(xml);
-
-        //      System.IO.StreamWriter file = new System.IO.StreamWriter("C:\\hamza\\1.txt");
-        //        file.WriteLine(xml);
-
-        //  file.Close();
-        Console.ReadLine();
-    }
-    public static string GetXMLFromObject(object o)
-    {
-        StringWriter sw = new StringWriter();
-        XmlTextWriter tw = null;
-        try
-        {
-            XmlSerializer serializer = new XmlSerializer(o.GetType());
-            tw = new XmlTextWriter(sw);
-            serializer.Serialize(tw, o);
-        }
-        catch (Exception ex)
-        {
-            //Handle Exception Code
-        }
-        finally
-        {
-            sw.Close();
-            if (tw != null)
-            {
-                tw.Close();
-            }
-        }
-        return sw.ToString();
-    }
-
-
-    public static Object ObjectToXML(string xml, Type objectType)
-    {
-        StringReader strReader = null;
-        XmlSerializer serializer = null;
-        XmlTextReader xmlReader = null;
-        Object obj = null;
-        try
-        {
-            strReader = new StringReader(xml);
-            serializer = new XmlSerializer(objectType);
-            xmlReader = new XmlTextReader(strReader);
-            obj = serializer.Deserialize(xmlReader);
-        }
-        catch (Exception exp)
-        {
-            //Handle Exception Code
-        }
-        finally
-        {
-            if (xmlReader != null)
-            {
-                xmlReader.Close();
-            }
-            if (strReader != null)
-            {
-                strReader.Close();
-            }
-        }
-        return obj;
-    }
+    public List<Movie> movieList = new List<Movie>();
 
 }
 
+//Movie class
+public class Movie
+{
+
+    public string Title
+    { get; set; }
+
+
+    public int Rating
+    { get; set; }
+
+
+    public DateTime ReleaseDate
+    { get; set; }
+
+}
+
+public class XmlHandler
+{
+}
+
+private void CreateXml_Click(object sender, EventArgs e)
+{
+    string filePath = path + textBox_XmlFileName.Text + ".xml";
+
+    Movie firstMov = new Movie();
+    firstMov.Title = "Shrek";
+    firstMov.Rating = 2;
+    firstMov.ReleaseDate = DateTime.Now;
+
+    Movie secondMov = new Movie();
+    secondMov.Title = "Spider Man";
+    secondMov.Rating = 4;
+    secondMov.ReleaseDate = DateTime.Now;
+
+    Movies moviesObj = new Movies();
+    moviesObj.movieList.Add(firstMov);
+    moviesObj.movieList.Add(secondMov);
+    List<Movie> movList = new List<Movie>() { firstMov, secondMov };
+
+    XmlHandler.SerializeToXml(moviesObj.movieList, filePath);
+
+}
+
+// The static class and funcion that creates the xml file 
+public static void SerializeToXml(List<Movie> movies, string filePath)
+{
+    XmlSerializer xls = new XmlSerializer(typeof(List<Movie>));
+
+    TextWriter tw = new StreamWriter(filePath);
+    xls.Serialize(tw, movies);
+    tw.Close();
+}
