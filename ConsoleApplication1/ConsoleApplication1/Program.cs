@@ -17,17 +17,24 @@ class Program
 {
     static void Main(string[] args)
     {
-        Employee emp = new Employee();
-        emp.FirstName = "Code";
-        emp.LastName = "Handbook";
+        Employee temp = new Employee();
+        temp.FirstName = "Code";
+        temp.LastName = "Handbook";
 
-        string xml = GetXMLFromObject(emp);
-        Console.WriteLine(xml);
+        Type testing = null;
+        string xml = GetXMLFromObject(temp);
+        Employee emp=new Employee();
+        emp= (Employee) ObjectToXML(xml,typeof(Employee));
 
-        System.IO.StreamWriter file = new System.IO.StreamWriter("c:\\test.txt");
-        file.WriteLine(lines);
+        Console.WriteLine("The name of the emp is {0}",temp.FirstName);
+        Console.WriteLine("The name of the temp is {0}", emp.FirstName);
 
-        file.Close();
+        //    Console.WriteLine(xml);
+
+        //      System.IO.StreamWriter file = new System.IO.StreamWriter("C:\\hamza\\1.txt");
+        //        file.WriteLine(xml);
+
+        //  file.Close();
         Console.ReadLine();
     }
     public static string GetXMLFromObject(object o)
